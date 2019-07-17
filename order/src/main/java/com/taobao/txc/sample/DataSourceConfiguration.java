@@ -11,10 +11,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * @author jimin.jm@alibaba-inc.com
- * @date 2019/06/24
- */
 @Configuration
 public class DataSourceConfiguration {
     @Bean

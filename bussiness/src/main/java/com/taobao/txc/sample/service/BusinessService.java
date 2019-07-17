@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import com.taobao.txc.client.aop.annotation.TxcTransaction;
+import com.taobao.txc.sample.TestDatas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,12 +17,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * The type Business service.
- *
- * @author jimin.jm @alibaba-inc.com
- * @date 2019 /06/14
- */
 @Service
 public class BusinessService {
 
@@ -34,20 +29,13 @@ public class BusinessService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    /**
-     * 减库存，下订单
-     *
-     * @param userId        the user id
-     * @param commodityCode the commodity code
-     * @param orderCount    the order count
-     */
     @TxcTransaction
     public void purchase(String userId, String commodityCode, int orderCount, boolean rollback) {
         String result = restTemplate.getForObject(
-            "http://127.0.0.1:8081/deduct/" + commodityCode + "/" + orderCount,
+            "http://127.0.0.1:8081/storage/" + commodityCode + "/" + orderCount,
             String.class);
         if (!SUCCESS.equals(result)) {
-            throw new RuntimeException("storage return fail");
+            throw new RuntimeException("库存服务调用失败,事务回滚!");
         }
         String url = "http://127.0.0.1:8082/order";
         HttpHeaders headers = new HttpHeaders();
@@ -67,45 +55,40 @@ public class BusinessService {
         result = response.getBody();
 
         if (!SUCCESS.equals(result)) {
-            throw new RuntimeException("order return fail");
+            throw new RuntimeException("订单服务调用失败,事务回滚!");
         }
 
         if (!validData(userId, commodityCode)) {
-            throw new RuntimeException("账户或库存不足,执行回滚");
+            throw new RuntimeException("账户或库存不足,事务回滚!");
         }
 
         if (rollback) {
             throw new RuntimeException("because of rollback param setting, start to rollback");
         }
     }
-
-    /**
-     * Init data.
-     */
     @PostConstruct
     public void initData() {
         jdbcTemplate.update("delete from account_tbl");
         jdbcTemplate.update("delete from order_tbl");
         jdbcTemplate.update("delete from storage_tbl");
-        jdbcTemplate.update("insert into account_tbl(user_id,money) values('U100000','10000') ");
-        jdbcTemplate.update("insert into storage_tbl(commodity_code,count) values('C100000','200') ");
+        jdbcTemplate.update("insert into account_tbl(user_id,money) values('" + TestDatas.USER_ID + "','10000') ");
+        jdbcTemplate.update("insert into storage_tbl(commodity_code,count) values('" + TestDatas.COMMODITY_CODE + "','100') ");
     }
 
-    /**
-     * Valid data boolean.
-     *
-     * @return the boolean
-     */
     public boolean validData(String userId, String commodityCode) {
         Map accountMap = jdbcTemplate.queryForMap("select * from account_tbl where user_id='" + userId + "'");
         if (Integer.parseInt(accountMap.get("money").toString()) < 0) {
+            // 余额被扣减为负：余额不足
             return false;
         }
+
         Map storageMap = jdbcTemplate.queryForMap(
             "select * from storage_tbl where commodity_code='" + commodityCode + "'");
         if (Integer.parseInt(storageMap.get("count").toString()) < 0) {
+            // 库存被扣减为负：库存不足
             return false;
         }
+
         return true;
     }
 }

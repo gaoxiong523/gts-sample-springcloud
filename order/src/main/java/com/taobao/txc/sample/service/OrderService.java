@@ -11,10 +11,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * @author jimin.jm@alibaba-inc.com
- * @date 2019/06/14
- */
 @Service
 public class OrderService {
 
@@ -25,11 +21,12 @@ public class OrderService {
     private JdbcTemplate jdbcTemplate;
 
     public void create(String userId, String commodityCode, Integer count) {
-
+        // 定单总价 = 订购数量(count) * 商品单价(100)
         int orderMoney = count * 100;
+        // 生成订单
         jdbcTemplate.update("insert order_tbl(user_id,commodity_code,count,money) values(?,?,?,?)",
             new Object[] {userId, commodityCode, count, orderMoney});
-
+        // 调用账户余额扣减
         invokerAccountService(userId, orderMoney);
 
     }

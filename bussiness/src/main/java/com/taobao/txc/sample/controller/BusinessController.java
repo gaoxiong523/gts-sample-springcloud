@@ -1,5 +1,6 @@
 package com.taobao.txc.sample.controller;
 
+import com.taobao.txc.sample.TestDatas;
 import com.taobao.txc.sample.service.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,18 +10,11 @@ import org.springframework.web.client.RestTemplate;
 
 import static com.taobao.txc.sample.service.BusinessService.SUCCESS;
 
-/**
- * @author jimin.jm@alibaba-inc.com
- * @date 2019/06/14
- */
-
 @RestController
 public class BusinessController {
 
-    private static final String USER_ID = "U100000";
-    private static final String COMMODITY_CODE = "C100000";
-    private static final int ORDER_COUNT = 30;
     private final RestTemplate restTemplate;
+
     @Autowired
     private BusinessService businessService;
 
@@ -28,19 +22,17 @@ public class BusinessController {
         this.restTemplate = restTemplate;
     }
 
-    /**
-     * 购买下单，模拟全局事务提交
-     *
-     * @return
-     */
-    @RequestMapping(value = "/purchase/transactional", method = RequestMethod.GET, produces = "application/json")
-    public String purchaseTransactional(Boolean rollback) {
+    @RequestMapping(value = "/purchase", method = RequestMethod.GET, produces = "application/json")
+    public String purchase(Boolean rollback, Integer count) {
+        int orderCount = 30;
+        if (count != null) {
+            orderCount = count;
+        }
         try {
-
-            businessService.purchase(USER_ID, COMMODITY_CODE, ORDER_COUNT,
+            businessService.purchase(TestDatas.USER_ID, TestDatas.COMMODITY_CODE, orderCount,
                 rollback == null ? false : rollback.booleanValue());
         } catch (Exception exx) {
-            return "error:" + exx.getMessage();
+            return "Purchase Failed:" + exx.getMessage();
         }
         return SUCCESS;
     }

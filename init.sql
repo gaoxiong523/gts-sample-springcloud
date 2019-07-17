@@ -38,6 +38,3 @@ CREATE TABLE `txc_undo_log` (
   PRIMARY KEY (`id`),
   KEY `idx_unionkey` (`xid`,`branch_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='事务日志表';
-
-INSERT INTO `storage_tbl`(commodity_code, count) VALUES ('C100000', 100000);
-INSERT INTO `account_tbl`(user_id, money) VALUES ('U100000', 100000);
