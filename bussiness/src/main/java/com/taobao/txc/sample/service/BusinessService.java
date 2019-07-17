@@ -5,7 +5,10 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import com.taobao.txc.client.aop.annotation.TxcTransaction;
+import com.taobao.txc.common.TxcContext;
 import com.taobao.txc.sample.TestDatas;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +23,8 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class BusinessService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessService.class);
+
     public static final String SUCCESS = "SUCCESS";
     public static final String FAIL = "FAIL";
 
@@ -31,6 +36,9 @@ public class BusinessService {
 
     @TxcTransaction
     public void purchase(String userId, String commodityCode, int orderCount, boolean rollback) {
+        String xid = TxcContext.getCurrentXid();
+        LOGGER.info("New Transaction Begins: " + xid);
+
         String result = restTemplate.getForObject(
             "http://127.0.0.1:8081/storage/" + commodityCode + "/" + orderCount,
             String.class);
