@@ -7,7 +7,6 @@ CREATE TABLE `storage_tbl` (
   UNIQUE KEY (`commodity_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 DROP TABLE IF EXISTS `order_tbl`;
 CREATE TABLE `order_tbl` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -17,7 +16,6 @@ CREATE TABLE `order_tbl` (
   `money` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 DROP TABLE IF EXISTS `account_tbl`;
 CREATE TABLE `account_tbl` (
@@ -35,7 +33,7 @@ CREATE TABLE `txc_undo_log` (
   `branch_id` bigint(20) NOT NULL COMMENT '分支事务ID',
   `rollback_info` longblob NOT NULL COMMENT 'LOG',
   `status` int(11) NOT NULL COMMENT '状态',
-  `server` varchar(32) NOT NULL COMMENT '分支所在的 TXC server IP',
+  `server` varchar(32) NOT NULL COMMENT '服务器',
   PRIMARY KEY (`id`),
   KEY `idx_unionkey` (`xid`,`branch_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='事务日志表';
