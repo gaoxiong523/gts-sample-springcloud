@@ -20,7 +20,6 @@ public class OrderService {
 
     @Autowired
     private RestTemplate restTemplate;
-    ;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

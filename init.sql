@@ -25,6 +25,7 @@ CREATE TABLE `account_tbl` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `txc_undo_log`;
 CREATE TABLE `txc_undo_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `gmt_create` datetime NOT NULL COMMENT '创建时间',
@@ -37,3 +38,6 @@ CREATE TABLE `txc_undo_log` (
   PRIMARY KEY (`id`),
   KEY `idx_unionkey` (`xid`,`branch_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='事务日志表';
+
+INSERT INTO `storage_tbl`(commodity_code, count) VALUES ('C100000', 100000);
+INSERT INTO `account_tbl`(user_id, money) VALUES ('U100000', 100000);
