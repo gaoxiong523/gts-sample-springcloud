@@ -20,6 +20,13 @@
             <systemPath>${project.basedir}/../common/lib/txc-client-${gts.sdk.version}.jar</systemPath>
         </dependency>
         <dependency>
+            <groupId>com.taobao.txc</groupId>
+            <artifactId>txc-client-springcloud</artifactId>
+            <version>${gts.sdk.version}</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/../common/lib/txc-client-springcloud-${gts.sdk.version}.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
