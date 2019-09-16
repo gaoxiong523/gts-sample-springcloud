@@ -11,18 +11,10 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 public class OrderController {
 
-    private final RestTemplate restTemplate;
-    private final JdbcTemplate jdbcTemplate;
-
     @Autowired
     private OrderService orderService;
 
-    public OrderController(JdbcTemplate jdbcTemplate, RestTemplate restTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.restTemplate = restTemplate;
-    }
-
-    @RequestMapping(value = "/order", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/create", method = RequestMethod.GET, produces = "application/json")
     public String create(String userId, String commodityCode, int orderCount) {
         try {
             orderService.create(userId, commodityCode, orderCount);

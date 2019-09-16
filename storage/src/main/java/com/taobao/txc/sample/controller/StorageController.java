@@ -13,9 +13,8 @@ public class StorageController {
     @Autowired
     private StorageService storageService;
 
-    @RequestMapping(value = "/storage/{commodityCode}/{count}", method = RequestMethod.GET,
-        produces = "application/json")
-    public String deduct(@PathVariable String commodityCode, @PathVariable Integer count) {
+    @RequestMapping(value = "/deduct", method = RequestMethod.GET, produces = "application/json")
+    public String deduct(String commodityCode, int count) {
         try {
             storageService.deduct(commodityCode, count);
         } catch (Exception exx) {

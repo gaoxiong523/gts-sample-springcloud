@@ -29,7 +29,10 @@ public class BusinessService {
     public static final String FAIL = "FAIL";
 
     @Autowired
-    private RestTemplate restTemplate;
+    private StorageFeignClient storageFeignClient;
+
+    @Autowired
+    private OrderFeignClient orderFeignClient;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -39,28 +42,13 @@ public class BusinessService {
         String xid = TxcContext.getCurrentXid();
         LOGGER.info("New Transaction Begins: " + xid);
 
-        String result = restTemplate.getForObject(
-            "http://127.0.0.1:8081/storage/" + commodityCode + "/" + orderCount,
-            String.class);
+        String result = storageFeignClient.deduct(commodityCode, orderCount);
+
         if (!SUCCESS.equals(result)) {
             throw new RuntimeException("库存服务调用失败,事务回滚!");
         }
-        String url = "http://127.0.0.1:8082/order";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-        map.add("userId", userId);
-        map.add("commodityCode", commodityCode);
-        map.add("orderCount", orderCount + "");
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(
-            map, headers);
-
-        ResponseEntity<String> response = restTemplate.postForEntity(url, request,
-            String.class);
-
-        result = response.getBody();
+        result = orderFeignClient.create(userId, commodityCode, orderCount);
 
         if (!SUCCESS.equals(result)) {
             throw new RuntimeException("订单服务调用失败,事务回滚!");
@@ -71,7 +59,7 @@ public class BusinessService {
         }
 
         if (rollback) {
-            throw new RuntimeException("because of rollback param setting, start to rollback");
+            throw new RuntimeException("Force rollback ... ");
         }
     }
     @PostConstruct

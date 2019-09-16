@@ -28,6 +28,7 @@
                             <url>http://txc-console.oss-cn-beijing.aliyuncs.com/sdk/txc-client-${gts.sdk.version}.jar</url>
                             <outputDirectory>${project.basedir}/lib</outputDirectory>
                             <overwrite>true</overwrite>
+                            <skipCache>true</skipCache>
                         </configuration>
                     </execution>
                     <execution>
@@ -40,6 +41,7 @@
                             <url>http://txc-console.oss-cn-beijing.aliyuncs.com/sdk/txc-client-springcloud-${gts.sdk.version}.jar</url>
                             <outputDirectory>${project.basedir}/lib</outputDirectory>
                             <overwrite>true</overwrite>
+                            <skipCache>true</skipCache>
                         </configuration>
                     </execution>
                 </executions>

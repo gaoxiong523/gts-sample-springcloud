@@ -13,14 +13,8 @@ import static com.taobao.txc.sample.service.BusinessService.SUCCESS;
 @RestController
 public class BusinessController {
 
-    private final RestTemplate restTemplate;
-
     @Autowired
     private BusinessService businessService;
-
-    public BusinessController(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
 
     @RequestMapping(value = "/purchase", method = RequestMethod.GET, produces = "application/json")
     public String purchase(Boolean rollback, Integer count) {
