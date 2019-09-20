@@ -1,31 +1,22 @@
 package com.taobao.txc.sample;
 
-import com.alibaba.druid.pool.DruidDataSource;
-
 import com.taobao.txc.datasource.cobar.TxcDataSource;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class DataSourceConfiguration {
+
+    // Note: 样例使用 MybatisAutoConfiguration 机制来自动生成 Mybatis 配置。
+    // 因为 MybatisAutoConfiguration 定义了条件 @ConditionalOnSingleCandidate(DataSource.class)
+    // 所以，这里只能定义一个 DataSource Bean 。
+    // 这只是样例的用法，不是 GTS 的限制。
+
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource")
-    public DruidDataSource dataSource() {
-        DruidDataSource druidDataSource = new DruidDataSource();
-        return druidDataSource;
+    public TxcDataSource dataSource() {
+        return new TxcDataSource();
     }
 
-    @Bean("dataSourceProxy")
-    public TxcDataSource dataSourceProxy(DruidDataSource dataSource) {
-        return new TxcDataSource(dataSource);
-    }
-
-    @Bean("jdbcTemplate")
-    @ConditionalOnBean(TxcDataSource.class)
-    public JdbcTemplate jdbcTemplate(TxcDataSource dataSourceProxy) {
-        return new JdbcTemplate(dataSourceProxy);
-    }
 }
