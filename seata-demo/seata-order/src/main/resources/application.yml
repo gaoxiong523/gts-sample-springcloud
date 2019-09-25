@@ -1,6 +1,6 @@
 spring:
   application:
-    name: storage-service
+    name: order-service
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/gts-storage?useSSL=false&serverTimezone=UTC
     username: root
@@ -12,7 +12,14 @@ spring:
       seata:
         tx-service-group: my_test_tx_group
 server:
-  port: 9001
+  port: 9092
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:9091/eureka/
 logging:
   level:
     - io.seata: debug

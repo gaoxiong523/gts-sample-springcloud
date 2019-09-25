@@ -1,8 +1,5 @@
 server:
   port: 9091
-spring:
-  application:
-    name: seata-eureka
 eureka:
   instance:
     hostname: 127.0.0.1
