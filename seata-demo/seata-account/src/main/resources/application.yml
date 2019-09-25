@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: storage-service
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/gts-storage?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+  jpa:
+    show-sql: true
+  cloud:
+    alibaba:
+      seata:
+        tx-service-group: my_test_tx_group
+server:
+  port: 9001
+logging:
+  level:
+    - io.seata: debug
+    - org.springframework.cloud.alibaba.seata.web: debug
