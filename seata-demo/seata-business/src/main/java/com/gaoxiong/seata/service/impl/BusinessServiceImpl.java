@@ -24,7 +24,7 @@ public class BusinessServiceImpl implements BusinessService {
     private StorageFeignClient storageFeignClient;
 
     @Override
-    @GlobalTransactional
+    @GlobalTransactional(timeoutMills = 600000)
     public void purchase ( String userId, String commodityCode, int orderCount ) throws Exception {
         orderFeignClient.create(userId, commodityCode, orderCount);
         storageFeignClient.deduct(commodityCode,orderCount );

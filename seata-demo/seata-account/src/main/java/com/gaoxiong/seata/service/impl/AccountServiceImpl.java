@@ -4,11 +4,14 @@ import com.gaoxiong.seata.pojo.Account;
 import com.gaoxiong.seata.repository.AccountRepository;
 import com.gaoxiong.seata.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author gaoxiong
@@ -26,16 +29,33 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private RedissonClient redissonClient;
+
     @Override
     public void debit ( String userId, BigDecimal num ) {
-        log.info("用户id {},进入方法,进行扣减余额{}操作",userId,num );
-        Account account = accountRepository.findByUserId(userId);
-        account.setMoney(new BigDecimal(account.getMoney()).subtract(num).intValue());
-        Account save = accountRepository.save(account);
-        log.info("扣减余额成功,扣减之后的账户{}",save );
+        //设置锁定资源名称
+        RLock lock = redissonClient.getLock(userId);
 
-        if (ERROR_USER_ID.equals(userId)) {
-            throw new RuntimeException("account branch exception");
+        try {
+            //尝试获取锁
+            log.info("尝试获取锁");
+            lock.tryLock(500, 15000, TimeUnit.MILLISECONDS);
+            log.info("用户id {},进入方法,进行扣减余额{}操作", userId, num);
+            Account account = accountRepository.findByUserId(userId);
+            account.setMoney(new BigDecimal(account.getMoney()).subtract(num).intValue());
+            Account save = accountRepository.save(account);
+            log.info("扣减余额成功,扣减之后的账户{}", save);
+
+            if (ERROR_USER_ID.equals(userId)) {
+                throw new RuntimeException("account branch exception");
+            }
+        } catch (InterruptedException e) {
+            log.error("获取锁失败{}", e);
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+            log.info("释放锁成功");
         }
     }
 }
