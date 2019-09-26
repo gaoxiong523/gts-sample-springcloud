@@ -2,6 +2,7 @@ package com.gaoxiong.seata.service;
 
 import com.gaoxiong.seata.pojo.Storage;
 import com.gaoxiong.seata.repository.StorageRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +15,22 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
+@Slf4j
 public class StorageServiceImpl implements StorageService {
 
     @Autowired
     private StorageRepository storageRepository;
 
     @Override
-    public void deduct ( String commodityCode, int count ) {
+    public void deduct ( String commodityCode, int count ) throws Exception {
+        log.info("进入扣减库存服务,商品编码{},数量{}",commodityCode,count );
         Storage storage = storageRepository.findByCommodityCode(commodityCode);
-        storage.setCount(storage.getCount() - count);
-        storageRepository.save(storage);
+        int remainCount = storage.getCount() - count;
+        if (remainCount < 0) {
+            throw new Exception("库存不足!");
+        }
+        storage.setCount(remainCount);
+        Storage save = storageRepository.save(storage);
+        log.info("扣减成功之后的商品库存信息{}",save );
     }
 }

@@ -28,9 +28,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void debit ( String userId, BigDecimal num ) {
+        log.info("用户id {},进入方法,进行扣减余额{}操作",userId,num );
         Account account = accountRepository.findByUserId(userId);
         account.setMoney(new BigDecimal(account.getMoney()).subtract(num).intValue());
-        accountRepository.save(account);
+        Account save = accountRepository.save(account);
+        log.info("扣减余额成功,扣减之后的账户{}",save );
 
         if (ERROR_USER_ID.equals(userId)) {
             throw new RuntimeException("account branch exception");

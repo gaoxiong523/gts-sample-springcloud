@@ -24,3 +24,7 @@ logging:
   level:
     - io.seata: debug
     - org.springframework.cloud.alibaba.seata.web: debug
+feign:
+  httpclient:
+    connection-timer-repeat: 30000
+    connection-timeout: 20000

@@ -2,7 +2,7 @@ spring:
   application:
     name: order-service
   datasource:
-    url: jdbc:mysql://192.168.150.131:3306/db_order?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/db_order?useSSL=false&serverTimezone=UTC
     username: root
     password: 123456
   jpa:
@@ -24,3 +24,7 @@ logging:
   level:
     - io.seata: debug
     - org.springframework.cloud.alibaba.seata.web: debug
+feign:
+  httpclient:
+    connection-timeout: 20000
+    connection-timer-repeat: 30000

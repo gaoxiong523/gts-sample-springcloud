@@ -12,5 +12,5 @@ public interface StorageService {
      * @param commodityCode 商品编码
      * @param count
      */
-    void deduct ( String commodityCode, int count );
+    void deduct ( String commodityCode, int count ) throws Exception;
 }

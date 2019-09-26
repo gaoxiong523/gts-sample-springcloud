@@ -2,7 +2,7 @@ spring:
   application:
     name: account-service
   datasource:
-    url: jdbc:mysql://192.168.150.131:3306/db_account?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/db_account?useSSL=false&serverTimezone=UTC
     username: root
     password: 123456
   jpa:

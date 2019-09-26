@@ -13,13 +13,13 @@ public class StorageController {
     private StorageService storageService;
 
     @RequestMapping(value = "/deduct", method = RequestMethod.GET, produces = "application/json")
-    public String deduct(String commodityCode, int count) {
-        try {
+    public String deduct(String commodityCode, int count) throws Exception {
+//        try {
             storageService.deduct(commodityCode, count);
-        } catch (Exception exx) {
-            exx.printStackTrace();
-            return "FAIL";
-        }
+//        } catch (Exception exx) {
+//            exx.printStackTrace();
+//            return "FAIL";
+//        }
         return "SUCCESS";
     }
 }

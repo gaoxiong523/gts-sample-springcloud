@@ -25,7 +25,7 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     @GlobalTransactional
-    public void purchase ( String userId, String commodityCode, int orderCount ) {
+    public void purchase ( String userId, String commodityCode, int orderCount ) throws Exception {
         orderFeignClient.create(userId, commodityCode, orderCount);
         storageFeignClient.deduct(commodityCode,orderCount );
     }
