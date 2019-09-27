@@ -31,14 +31,15 @@ logging:
     - io.seata: debug
     - org.springframework.cloud.alibaba.seata.web: debug
 feign:
-  httpclient:
-    connection-timeout: 20000
-    connection-timer-repeat: 30000
-    time-to-live: 9000
   hystrix:
     enabled: false
   okhttp:
     enabled: true
+  client:
+    config:
+      account-service:
+        connectTimeout: 30000
+        readTimeout: 20000
 ribbon:
   eager-load:
     enabled: true

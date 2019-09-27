@@ -2,6 +2,8 @@ package com.gaoxiong.seata.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import io.seata.rm.datasource.DataSourceProxy;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,10 +20,18 @@ import javax.sql.DataSource;
 @Configuration
 public class DataSourceConfig {
 
+    @Autowired
+    private DruidProperties druidProperties;
+
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource")
     public DruidDataSource druidDataSource(){
         DruidDataSource druidDataSource = new DruidDataSource();
+        druidDataSource.setInitialSize(druidProperties.getInitialSize());
+        druidDataSource.setMinIdle(druidProperties.getMinIdle());
+        druidDataSource.setMaxActive(druidProperties.getMaxActive());
+        druidDataSource.setMaxWait(druidProperties.getMaxWait());
+        druidDataSource.setPoolPreparedStatements(druidProperties.isPoolPreparedStatements());
         return druidDataSource;
     }
 

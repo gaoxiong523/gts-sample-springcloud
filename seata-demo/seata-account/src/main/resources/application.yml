@@ -21,7 +21,7 @@ spring:
     host: 106.12.84.126
     port: 6379
 server:
-  port: 9084
+  port: 9074
 logging:
   level:
     - io.seata: debug
