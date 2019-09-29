@@ -11,6 +11,9 @@ spring:
     alibaba:
       seata:
         tx-service-group: my_test_tx_group
+    sentinel:
+      transport:
+        dashboard: localhost:8080
 server:
   port: 9095
 eureka:
@@ -32,6 +35,8 @@ feign:
   hystrix:
     enabled: false
   okhttp:
+    enabled: true
+  sentinel:
     enabled: true
 ribbon:
   eager-load:

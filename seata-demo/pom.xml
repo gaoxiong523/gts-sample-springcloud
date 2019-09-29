@@ -8,6 +8,7 @@
         <module>seata-order</module>
         <module>seata-storage</module>
         <module>seata-eureka</module>
+        <module>seata-storage-feign-api</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

@@ -28,7 +28,7 @@ eureka:
     service-url:
       defaultZone: http://${eureka.instance.hostname}:9091/eureka/
 server:
-  port: 9093
+  port: 9073
 logging:
   level:
     - io.seata: debug

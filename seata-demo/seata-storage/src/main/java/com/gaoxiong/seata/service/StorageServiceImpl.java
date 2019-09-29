@@ -33,16 +33,20 @@ public class StorageServiceImpl implements StorageService {
         RLock lock = redissonClient.getLock(commodityCode);
 
         try {
-            lock.tryLock(50,15000 ,TimeUnit.MILLISECONDS );
-            log.info("进入扣减库存服务,商品编码{},数量{}",commodityCode,count );
-            Storage storage = storageRepository.findByCommodityCode(commodityCode);
-            int remainCount = storage.getCount() - count;
-            if (remainCount < 0) {
-                throw new Exception("库存不足!");
+
+            boolean tryLock = lock.tryLock(50, 15000, TimeUnit.MILLISECONDS);
+            if (tryLock) {
+                log.info("成功获取到锁{}",lock );
+                log.info("进入扣减库存服务,商品编码{},数量{}",commodityCode,count );
+                Storage storage = storageRepository.findByCommodityCode(commodityCode);
+                int remainCount = storage.getCount() - count;
+                if (remainCount < 0) {
+                    throw new Exception("库存不足!");
+                }
+                storage.setCount(remainCount);
+                Storage save = storageRepository.save(storage);
+                log.info("扣减成功之后的商品库存信息{}",save );
             }
-            storage.setCount(remainCount);
-            Storage save = storageRepository.save(storage);
-            log.info("扣减成功之后的商品库存信息{}",save );
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

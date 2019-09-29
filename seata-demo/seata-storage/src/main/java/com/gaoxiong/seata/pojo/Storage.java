@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Data;
+import org.springframework.data.annotation.Version;
 
 @Table(name = "storage_tbl")
 @Data
@@ -25,6 +26,11 @@ public class Storage implements Serializable {
 
   @Column(name = "count")
   private Integer count = 0;
+
+
+//  @Version
+  @Column(name = "version_num")
+  private Integer versionNum;
 
   
 }

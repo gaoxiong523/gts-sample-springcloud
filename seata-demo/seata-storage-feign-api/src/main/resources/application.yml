@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: storage-service-api
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:9091/eureka/
+server:
+  port: 9099
